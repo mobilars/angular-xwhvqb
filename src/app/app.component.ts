@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import * as L from "leaflet";
 import "leaflet.markercluster";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "my-app",
@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   map: L.Map;
   geojsonFeature;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     //this.init();
@@ -35,22 +35,21 @@ export class AppComponent implements OnInit {
     );
     tiles.addTo(this.map);
 
+    this.http
+      .get<any>(
+        "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/track.js"
+      )
+      .subscribe(data => {
+        this.geojsonFeature = data;
+        console.log(this.geojsonFeature);
 
-    this.http.get<any>('https://jsonplaceholder.typicode.com/users').subscribe(data => {
-            this.geojsonFeature = data;
-        })
-
-
-
-    L.geoJSON(this.geojsonFeature, {
-      style: {
-        color: '#ff0000',
-        weight: 5,
-        opacity: 1
-      }
-    }).addTo(this.map);
-
-
-
+        L.geoJSON(this.geojsonFeature, {
+          style: {
+            color: "#ff0000",
+            weight: 5,
+            opacity: 1
+          }
+        }).addTo(this.map);
+      });
   }
 }
