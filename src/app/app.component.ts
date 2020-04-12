@@ -18,41 +18,7 @@ export class AppComponent implements OnInit {
     this.initMap();
   }
 
-  testData = {
-    phone_number: "+4790733036",
-    total: 900,
-    offset: 0,
-    per_page: 30,
-    events: [
-      {
-        time_from: "2020-04-07T13:39:21Z",
-        time_to: "2020-04-07T13:40:24Z",
-        latitude: 59.846695,
-        longitude: 10.80497,
-        accuracy: 8.00100040435791,
-        speed: -1.0,
-        speed_accuracy: 0.0,
-        altitude: 76.84500122070312,
-        altitude_accuracy: 3.0
-      },
-      {
-        time_from: "2020-04-07T13:39:10Z",
-        time_to: "2020-04-07T13:39:20Z",
-        latitude: 59.846771,
-        longitude: 10.804977,
-        accuracy: 8.00100040435791,
-        speed: 0.6449999809265137,
-        speed_accuracy: 0.0,
-        altitude: 76.48200225830078,
-        altitude_accuracy: 3.0
-      }
-    ],
-    next: {
-      offset: 30,
-      per_page: 30
-    }
-  };
-
+  // Convert from innsyns-format to geojson
   private convertFormat(inputJSON) {
     var innArr = [];
     for (var i = 0; i < inputJSON.events.length; i++) {
@@ -86,13 +52,17 @@ export class AppComponent implements OnInit {
 
     return result;
   }
+
+  // Set up map
   private initMap(): void {
+
+    // Create map with center in Oslo
     this.map = L.map("map", {
-      //center: [59.96051, 10.639229],
       center: [59.846695, 10.80497],
       zoom: 9
     });
 
+    // Add the map layer and attribution
     const tiles = L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
@@ -103,10 +73,10 @@ export class AppComponent implements OnInit {
     );
     tiles.addTo(this.map);
 
-    // Download a track formatted as geojson and show
+    // Download a track formatted as geojson and display on map
     this.http
       .get<any>(
-        "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/track.js"
+        "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/track.json"
       )
       .subscribe(data => {
         this.geojsonFeature = data;
@@ -121,13 +91,21 @@ export class AppComponent implements OnInit {
         }).addTo(this.map);
       });
 
-    var drawPoints = this.convertFormat(this.testData);
-    L.geoJSON(drawPoints, {
-      style: {
-        color: "#ff0000",
-        weight: 5,
-        opacity: 1
-      }
-    }).addTo(this.map);
+    // Download a track formatted as innsyns-format and display on map
+    this.http
+      .get<any>(
+        "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/innsyn.json"
+      )
+      .subscribe(data => {
+        var drawPoints = this.convertFormat(data);
+        console.log(this.geojsonFeature);
+        L.geoJSON(drawPoints, {
+          style: {
+            color: "#ff0000",
+            weight: 5,
+            opacity: 1
+          }
+        }).addTo(this.map);
+      });
   }
 }
