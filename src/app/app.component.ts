@@ -203,7 +203,7 @@ export class AppComponent implements OnInit {
         //console.log(this.geojsonFeature);
         L.geoJSON(drawPoints, {
           style: {
-            color: "#ff0000",
+            color: "#00ffff",
             weight: 5,
             opacity: 1
           }
