@@ -79,15 +79,15 @@ export class AppComponent implements OnInit {
         //download: true,
         header: true,
         step: function(row) {
-          console.log("Row:", row.data);
-          if (parseFloat(row.data.longitude) && parseFloat(row.data.latitude) && parseFloat(row.data.accuracy) < 1) {
+          //console.log("Row:", row.data);
+          if (parseFloat(row.data.longitude) && parseFloat(row.data.latitude) && parseFloat(row.data.accuracy) < 20) {
             console.log(parseFloat(row.data.accuracy)+ " --- " + parseFloat(row.data.longitude)+ ", "+parseFloat(row.data.latitude));
             innArr.push([
               parseFloat(row.data.longitude),
               parseFloat(row.data.latitude)
             ]);
           } else {
-            console.log("Data excluded");
+            console.log("Data excluded"+ parseFloat(row.data.accuracy)+ " --- " + parseFloat(row.data.longitude)+ ", "+parseFloat(row.data.latitude));
           }
         },
         complete: result => {
