@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   private downloadShowCSV(url) {
     var innArr = [];
     this.papa.parse(url, {
-      download: true,
+      //download: true,
       header: true,
       step: function(row) {
         //console.log("Row:", row.data);
@@ -152,7 +152,8 @@ export class AppComponent implements OnInit {
       });
 
     this.downloadShowCSV(
-      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
+      //"https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
+      "/geo/lars.json"
     );
   }
 }
