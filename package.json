@@ -16,6 +16,7 @@
     "core-js": "3.6.5",
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.4.1",
+    "ngx-papaparse": "4",
     "papaparse": "^5.2.0",
     "rxjs": "6.5.5",
     "tslib": "1.11.1",

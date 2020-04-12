@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import * as L from "leaflet";
 import "leaflet.markercluster";
 import { HttpClient } from "@angular/common/http";
+import { Papa } from "ngx-papaparse";
 
 @Component({
   selector: "my-app",
@@ -12,10 +13,53 @@ export class AppComponent implements OnInit {
   map: L.Map;
   geojsonFeature;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private papa: Papa) {}
 
   ngOnInit() {
     this.initMap();
+  }
+
+  // Download and convert CSV format
+  private downloadShowCSV(url) {
+    var innArr = [];
+    this.papa.parse(url, {
+      download: true,
+      header: true,
+      step: function(row) {
+        //console.log("Row:", row.data);
+        innArr.push([parseFloat(row.data.longitude), parseFloat(row.data.latitude)]);
+      },
+      complete: result => {
+        //console.log("Parsed: ", result);
+        //console.log("Parsed: ", innArr);
+        var dataToDisplay = {
+          type: "FeatureCollection",
+          name: "tracks",
+          crs: {
+            type: "name",
+            properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+          },
+          features: [
+            {
+              type: "Feature",
+              properties: { name: "20200410_143443.gpx" },
+              geometry: {
+                type: "MultiLineString",
+                coordinates: [innArr]
+              }
+            }
+          ]
+        };
+        console.log("dataToDisplay: ", JSON.stringify(dataToDisplay));
+        L.geoJSON(dataToDisplay, {
+          style: {
+            color: "#ff0000",
+            weight: 5,
+            opacity: 1
+          }
+        }).addTo(this.map);
+      }
+    });
   }
 
   // Convert from innsyns-format to geojson
@@ -55,7 +99,6 @@ export class AppComponent implements OnInit {
 
   // Set up map
   private initMap(): void {
-
     // Create map with center in Oslo
     this.map = L.map("map", {
       center: [59.846695, 10.80497],
@@ -107,5 +150,9 @@ export class AppComponent implements OnInit {
           }
         }).addTo(this.map);
       });
+
+    this.downloadShowCSV(
+      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
+    );
   }
 }
