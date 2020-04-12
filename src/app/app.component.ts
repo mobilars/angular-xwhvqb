@@ -23,11 +23,16 @@ export class AppComponent implements OnInit {
   private downloadShowCSV(url) {
     var innArr = [];
     this.papa.parse(url, {
-      //download: true,
+      download: true,
       header: true,
       step: function(row) {
         //console.log("Row:", row.data);
-        innArr.push([parseFloat(row.data.longitude), parseFloat(row.data.latitude)]);
+        if (parseFloat(row.data.longitude) && parseFloat(row.data.latitude)) {
+          innArr.push([
+            parseFloat(row.data.longitude),
+            parseFloat(row.data.latitude)
+          ]);
+        }
       },
       complete: result => {
         //console.log("Parsed: ", result);
@@ -50,10 +55,10 @@ export class AppComponent implements OnInit {
             }
           ]
         };
-        console.log("dataToDisplay: ", JSON.stringify(dataToDisplay));
+        //console.log("dataToDisplay: ", JSON.stringify(dataToDisplay));
         L.geoJSON(dataToDisplay, {
           style: {
-            color: "#ff0000",
+            color: "#0000ff",
             weight: 5,
             opacity: 1
           }
@@ -71,7 +76,7 @@ export class AppComponent implements OnInit {
         inputJSON.events[i].latitude
       ];
     }
-    console.log(JSON.stringify(innArr));
+    //console.log(JSON.stringify(innArr));
 
     var result = {
       type: "FeatureCollection",
@@ -92,7 +97,7 @@ export class AppComponent implements OnInit {
       ]
     };
 
-    console.log(JSON.stringify(result));
+    //console.log(JSON.stringify(result));
 
     return result;
   }
@@ -123,7 +128,7 @@ export class AppComponent implements OnInit {
       )
       .subscribe(data => {
         this.geojsonFeature = data;
-        console.log(this.geojsonFeature);
+        //console.log(this.geojsonFeature);
 
         L.geoJSON(this.geojsonFeature, {
           style: {
@@ -141,7 +146,7 @@ export class AppComponent implements OnInit {
       )
       .subscribe(data => {
         var drawPoints = this.convertFormat(data);
-        console.log(this.geojsonFeature);
+        //console.log(this.geojsonFeature);
         L.geoJSON(drawPoints, {
           style: {
             color: "#ff0000",
@@ -151,9 +156,11 @@ export class AppComponent implements OnInit {
         }).addTo(this.map);
       });
 
+    // Download and show CSV-based data (tur til Nesodden)
+    // Has issue with CORS
     this.downloadShowCSV(
-      //"https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
-      "/geo/lars.json"
+      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
+      //"/geo/lars.json"
     );
   }
 }
