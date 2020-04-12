@@ -67,6 +67,60 @@ export class AppComponent implements OnInit {
     });
   }
 
+  // Download and convert CSV format
+  // Got a problem with CORS on the function above, so implemented like this instead
+  // Maybe not optimal
+  private downloadShowCSV2(url) {
+    //console.log("Url:", url);
+    var innArr = [];
+    this.http.get(url, {responseType: 'text'}).subscribe(data => {
+      //console.log("Data:", data);
+      this.papa.parse(data, {
+        //download: true,
+        header: true,
+        step: function(row) {
+          //console.log("Row:", row.data);
+          if (parseFloat(row.data.longitude) && parseFloat(row.data.latitude)) {
+            innArr.push([
+              parseFloat(row.data.longitude),
+              parseFloat(row.data.latitude)
+            ]);
+          }
+        },
+        complete: result => {
+          //console.log("Parsed: ", result);
+          //console.log("Parsed: ", innArr);
+          var dataToDisplay = {
+            type: "FeatureCollection",
+            name: "tracks",
+            crs: {
+              type: "name",
+              properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+            },
+            features: [
+              {
+                type: "Feature",
+                properties: { name: "20200410_143443.gpx" },
+                geometry: {
+                  type: "MultiLineString",
+                  coordinates: [innArr]
+                }
+              }
+            ]
+          };
+          //console.log("dataToDisplay: ", JSON.stringify(dataToDisplay));
+          L.geoJSON(dataToDisplay, {
+            style: {
+              color: "#0000ff",
+              weight: 5,
+              opacity: 1
+            }
+          }).addTo(this.map);
+        }
+      });
+    });
+  }
+
   // Convert from innsyns-format to geojson
   private convertFormat(inputJSON) {
     var innArr = [];
@@ -158,7 +212,7 @@ export class AppComponent implements OnInit {
 
     // Download and show CSV-based data (tur til Nesodden)
     // Has issue with CORS
-    this.downloadShowCSV(
+    this.downloadShowCSV2(
       "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
       //"/geo/lars.json"
     );
