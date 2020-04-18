@@ -4,6 +4,8 @@ import "leaflet.markercluster";
 import { HttpClient } from "@angular/common/http";
 import { Papa } from "ngx-papaparse";
 
+var acc = 10;
+
 @Component({
   selector: "my-app",
   templateUrl: "./app.component.html",
@@ -70,7 +72,7 @@ export class AppComponent implements OnInit {
   // Download and convert CSV format
   // Got a problem with CORS on the function above, so implemented like this instead
   // Maybe not optimal
-  private downloadShowCSV2(url) {
+  private downloadShowCSV2(url, color) {
     //console.log("Url:", url);
     var innArr = [];
     this.http.get(url, {responseType: 'text'}).subscribe(data => {
@@ -80,14 +82,14 @@ export class AppComponent implements OnInit {
         header: true,
         step: function(row) {
           //console.log("Row:", row.data);
-          if (parseFloat(row.data.longitude) && parseFloat(row.data.latitude) && parseFloat(row.data.accuracy) < 20) {
-            console.log(parseFloat(row.data.accuracy)+ " --- " + parseFloat(row.data.longitude)+ ", "+parseFloat(row.data.latitude));
+          if (parseFloat(row.data.longitude) && parseFloat(row.data.latitude) && parseFloat(row.data.accuracy) < acc) {
+            //console.log(parseFloat(row.data.accuracy)+ " --- " + parseFloat(row.data.longitude)+ ", "+parseFloat(row.data.latitude));
             innArr.push([
               parseFloat(row.data.longitude),
               parseFloat(row.data.latitude)
             ]);
           } else {
-            console.log("Data excluded"+ parseFloat(row.data.accuracy)+ " --- " + parseFloat(row.data.longitude)+ ", "+parseFloat(row.data.latitude));
+            //console.log("Data excluded"+ parseFloat(row.data.accuracy)+ " --- " + parseFloat(row.data.longitude)+ ", "+parseFloat(row.data.latitude));
           }
         },
         complete: result => {
@@ -114,7 +116,7 @@ export class AppComponent implements OnInit {
           //console.log("dataToDisplay: ", JSON.stringify(dataToDisplay));
           L.geoJSON(dataToDisplay, {
             style: {
-              color: "#0000ff",
+              color: color,
               weight: 5,
               opacity: 1
             }
@@ -216,15 +218,15 @@ export class AppComponent implements OnInit {
     // Download and show CSV-based data (tur til Nesodden)
     // Has issue with CORS
     this.downloadShowCSV2(
-      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
-      //"/geo/lars.json"
+      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv", 
+      "#0000ff"
     );
 
         // Download and show CSV-based data (tur til Nesodden)
     // Has issue with CORS
     this.downloadShowCSV2(
-      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv"
-      //"/geo/lars.json"
+      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/40ea8878728e11ea86d7ee3617b084b4.csv",
+      "#ff0000"
     );
   }
 }
