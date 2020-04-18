@@ -191,7 +191,7 @@ export class AppComponent implements OnInit {
 
         L.geoJSON(this.geojsonFeature, {
           style: {
-            color: "#ff0000",
+            color: "#00ffff",
             weight: 5,
             opacity: 1
           }
@@ -208,18 +208,12 @@ export class AppComponent implements OnInit {
         //console.log(this.geojsonFeature);
         L.geoJSON(drawPoints, {
           style: {
-            color: "#00ffff",
+            color: "#aa00ff",
             weight: 5,
             opacity: 1
           }
         }).addTo(this.map);
       });
-
-    // Download and show CSV-based data (tur til Nesodden)
-    this.downloadShowCSV2(
-      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv", 
-      "#0000ff"
-    );
 
     // Download and show CSV-based 
     this.downloadShowCSV2(
@@ -231,6 +225,12 @@ export class AppComponent implements OnInit {
     this.downloadShowCSV2(
       "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/7b0aae906eb811eab2dbf2c0332c0ef9.csv",
       "#00ff00"
+    );
+
+    // Download and show CSV-based data (tur til Nesodden)
+    this.downloadShowCSV2(
+      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv", 
+      "#0000ff"
     );
   }
 }

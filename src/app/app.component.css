@@ -19,3 +19,16 @@ p {
 #map {
   height: 100%;
 }
+
+*
+{
+     box-sizing: border-box;
+}
+.wrapper
+{
+     margin: 0 auto;
+     max-width: 900px;
+     padding: 0px;
+     float: center;
+     margin-left: 27px;
+}
