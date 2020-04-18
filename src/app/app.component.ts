@@ -12,7 +12,14 @@ var acc = 30;
   styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements OnInit {
+
+  message = {
+    id: 1,
+    text: '...'
+  };
+
   map: L.Map;
+  popup: L.Popup;
   geojsonFeature;
 
   constructor(private http: HttpClient, private papa: Papa) {}
@@ -161,6 +168,11 @@ export class AppComponent implements OnInit {
     return result;
   }
 
+  private onMapClick(e) {
+    console.log("You clicked the map at " + e.latlng.toString());
+    alert("You clicked the map at " + e.latlng.toString() );
+  }
+
   // Set up map
   private initMap(): void {
     // Create map with center in Oslo
@@ -168,6 +180,8 @@ export class AppComponent implements OnInit {
       center: [59.846695, 10.80497],
       zoom: 9
     });
+
+    this.map.on('click', this.onMapClick);
 
     // Add the map layer and attribution
     const tiles = L.tileLayer(
