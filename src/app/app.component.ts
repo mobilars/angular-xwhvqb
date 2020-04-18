@@ -216,17 +216,21 @@ export class AppComponent implements OnInit {
       });
 
     // Download and show CSV-based data (tur til Nesodden)
-    // Has issue with CORS
     this.downloadShowCSV2(
       "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/GPS-sample.csv", 
       "#0000ff"
     );
 
-        // Download and show CSV-based data (tur til Nesodden)
-    // Has issue with CORS
+    // Download and show CSV-based 
     this.downloadShowCSV2(
       "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/40ea8878728e11ea86d7ee3617b084b4.csv",
       "#ff0000"
+    );
+
+    // Download and show CSV-based 
+    this.downloadShowCSV2(
+      "https://raw.githubusercontent.com/mobilars/angular-xwhvqb/master/src/geo/7b0aae906eb811eab2dbf2c0332c0ef9.csv",
+      "#00ff00"
     );
   }
 }
