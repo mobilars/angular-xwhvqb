@@ -4,7 +4,7 @@ import "leaflet.markercluster";
 import { HttpClient } from "@angular/common/http";
 import { Papa } from "ngx-papaparse";
 
-var acc = 10;
+var acc = 20;
 
 @Component({
   selector: "my-app",
